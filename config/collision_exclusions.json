@@ -1,0 +1,45 @@
+{
+  "scope": "MJCF-only contact filtering. URDF collision shapes unchanged. Baseline assembly pairs only; requires task-specific contact validation.",
+  "pairs": [
+    {
+      "body1": "L_knee_pitch_link",
+      "body2": "L_ankle_roll_link",
+      "reason": "Adjacent lower-leg/ankle assembly, original mesh hull overlap"
+    },
+    {
+      "body1": "R_knee_pitch_link",
+      "body2": "R_ankle_roll_link",
+      "reason": "Adjacent lower-leg/ankle assembly, original mesh hull overlap"
+    },
+    {
+      "body1": "waist_yaw_link",
+      "body2": "waist_roll_link",
+      "reason": "Nested waist assembly, convex hull fills mechanism clearance"
+    },
+    {
+      "body1": "waist_roll_link",
+      "body2": "L_shoulder_roll_link",
+      "reason": "Torso/shoulder assembly, hull overlap at home"
+    },
+    {
+      "body1": "waist_roll_link",
+      "body2": "R_shoulder_roll_link",
+      "reason": "Torso/shoulder assembly, hull overlap at home"
+    },
+    {
+      "body1": "waist_roll_link",
+      "body2": "head_pitch_link",
+      "reason": "Torso/neck assembly, hull fills mechanism clearance"
+    },
+    {
+      "body1": "L_palm_link",
+      "body2": "L_thumb_mpp_link",
+      "reason": "Palm/thumb assembly, hull overlap at home"
+    },
+    {
+      "body1": "R_palm_Link",
+      "body2": "R_thumb_mpp_link",
+      "reason": "Palm/thumb assembly, hull overlap at home"
+    }
+  ]
+}

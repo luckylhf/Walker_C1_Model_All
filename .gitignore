@@ -1,0 +1,49 @@
+# ---- macOS ----
+.DS_Store
+._*
+.AppleDouble
+.Spotlight-V100
+.Trashes
+Icon?
+
+# ---- Python ----
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+
+# ---- 编辑器 / IDE ----
+.vscode/
+.idea/
+*.swp
+*~
+*.sublime-workspace
+
+# ---- 临时 / 备份 / 日志 ----
+*.log
+*.tmp
+*.bak
+*.orig
+*.rej
+
+# ---- 仿真缓存 ----
+*.blend1
+mujoco/*_log.txt
+
+# ---- 本机查看入口，不随客户版本交付 ----
+/查看带手MuJoCo.command
+/查看无手MuJoCo.command
+/打开原始USD.command
+
+# ---- 客户版本 docs 仅保留三张展示图，其余本地保留 ----
+/docs/*
+!/docs/1、URDF-C1.png
+!/docs/2、Mujoco-C1.png
+!/docs/3、USD-C1.png
+
+# ---- 内部生成、核验工具仅供本地维护；客户保留查看入口 ----
+/script/*
+!/script/view_mujoco.py

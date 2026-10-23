@@ -1,0 +1,32 @@
+{
+  "status": "geometry_inferred_pending_mechanical_confirmation",
+  "method": "User-requested Z-only visualization adjustment: move both hands +0.006 m in wrist local Z from the original face-mating baseline -0.0559 m to -0.0499 m, embedding the entire 6 mm wrist flange. Retain XY, RPY, all mesh/collision geometry and mass/inertia; interference deliberately not resolved. Bolt alignment unverified.",
+  "L": {
+    "parent": "L_wrist_roll_link",
+    "child": "L_hand_base_link",
+    "xyz": [
+      0,
+      0,
+      -0.0499
+    ],
+    "rpy": [
+      3.141592653589793,
+      0,
+      -1.5707963267948966
+    ]
+  },
+  "R": {
+    "parent": "R_wrist_roll_link",
+    "child": "R_hand_base_link",
+    "xyz": [
+      0,
+      0,
+      -0.0499
+    ],
+    "rpy": [
+      3.141592653589793,
+      0,
+      1.5707963267948966
+    ]
+  }
+}

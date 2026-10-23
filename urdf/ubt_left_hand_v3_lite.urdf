@@ -1,0 +1,372 @@
+<?xml version='1.0' encoding='utf-8'?>
+<robot name="ubt_left_hand_v3_lite_description">
+  <link name="L_hand_base_link">
+    <inertial>
+      <origin xyz="0.00043548 0.00027696 -0.0041197" rpy="0 0 0" />
+      <mass value="0.040015" />
+      <inertia ixx="1.6918E-05" ixy="-9.0105E-08" ixz="-5.8899E-08" iyy="7.3553E-06" iyz="-1.6374E-08" izz="2.3436E-05" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://walker_c1_description/meshes/left_hand/L_hand_base_link.STL" />
+      </geometry>
+      <material name="">
+        <color rgba="0.2 0.2 0.2 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://walker_c1_description/meshes/left_hand/L_hand_base_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="L_palm_link">
+    <inertial>
+      <origin xyz="-0.001384 -0.0025707 -0.00078581" rpy="0 0 0" />
+      <mass value="0.016732" />
+      <inertia ixx="2.1522E-05" ixy="1.6122E-09" ixz="-7.0031E-07" iyy="1.0639E-05" iyz="-2.2491E-06" izz="1.2369E-05" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://walker_c1_description/meshes/left_hand/L_palm_link.STL" />
+      </geometry>
+      <material name="">
+        <color rgba="0.2 0.2 0.2 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://walker_c1_description/meshes/left_hand/L_palm_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="L_palm_joint" type="fixed">
+    <origin xyz="0.014335 0.0064868 0.049593" rpy="0 0 0" />
+    <parent link="L_hand_base_link" />
+    <child link="L_palm_link" />
+    <axis xyz="0 0 0" />
+  </joint>
+  <link name="L_thumb_cmp_link">
+    <inertial>
+      <origin xyz="0.0043953 -0.0035986 0.0043585" rpy="0 0 0" />
+      <mass value="0.01511" />
+      <inertia ixx="9.204E-07" ixy="-6.385E-08" ixz="2.1596E-07" iyy="1.061E-06" iyz="-2.0358E-07" izz="1.0748E-06" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://walker_c1_description/meshes/left_hand/L_thumb_cmp_link.STL" />
+      </geometry>
+      <material name="">
+        <color rgba="0.2 0.2 0.2 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://walker_c1_description/meshes/left_hand/L_thumb_cmp_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="L_thumb_cmp_joint" type="revolute">
+    <origin xyz="-0.0086547 -0.035302 -0.039393" rpy="0 0 0" />
+    <parent link="L_palm_link" />
+    <child link="L_thumb_cmp_link" />
+    <axis xyz="0 0 -1" />
+    <limit lower="-0.96" upper="0" effort="1.35" velocity="2.09" />
+  </joint>
+  <link name="L_thumb_mpp_link">
+    <inertial>
+      <origin xyz="0.0323 -9.5043E-05 -0.0047587" rpy="0 0 0" />
+      <mass value="0.032268" />
+      <inertia ixx="2.0516E-06" ixy="-5.6169E-08" ixz="-4.7987E-07" iyy="1.4416E-05" iyz="1.2786E-07" izz="1.3213E-05" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://walker_c1_description/meshes/left_hand/L_thumb_mpp_link.STL" />
+      </geometry>
+      <material name="">
+        <color rgba="0.2 0.2 0.2 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://walker_c1_description/meshes/left_hand/L_thumb_mpp_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="L_thumb_mpp_joint" type="revolute">
+    <origin xyz="0.0089708 -0.0080399 0.010045" rpy="0 0 -0.81848" />
+    <parent link="L_thumb_cmp_link" />
+    <child link="L_thumb_mpp_link" />
+    <axis xyz="0 -1 0" />
+    <limit lower="0" upper="1.04" effort="1.35" velocity="2.09" />
+  </joint>
+  <link name="L_thumb_ip_link">
+    <inertial>
+      <origin xyz="0.01305 0.00048871 0.0047228" rpy="0 0 0" />
+      <mass value="0.015311" />
+      <inertia ixx="8.999E-07" ixy="6.8684E-09" ixz="5.624E-08" iyy="1.4463E-06" iyz="-1.8294E-08" izz="1.6123E-06" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://walker_c1_description/meshes/left_hand/L_thumb_ip_link.STL" />
+      </geometry>
+      <material name="">
+        <color rgba="0.2 0.2 0.2 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://walker_c1_description/meshes/left_hand/L_thumb_ip_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="L_thumb_ip_joint" type="revolute">
+    <origin xyz="0.072609 -0.0009398 -0.0089416" rpy="0 0 0" />
+    <parent link="L_thumb_mpp_link" />
+    <child link="L_thumb_ip_link" />
+    <axis xyz="0 -1 0" />
+    <limit lower="0" upper="1.05" effort="1.35" velocity="2.09" />
+  </joint>
+  <link name="L_index_mpp_link">
+    <inertial>
+      <origin xyz="-0.00187064057578237 0.000143314448611105 0.0148352232408382" rpy="0 0 0" />
+      <mass value="0.0130509052302033" />
+      <inertia ixx="2.53593722173364E-06" ixy="6.37486168251765E-11" ixz="5.7590048522845E-08" iyy="2.40629695809144E-06" iyz="-1.45691345758322E-09" izz="7.73810046286331E-07" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://walker_c1_description/meshes/left_hand/L_index_mpp_link.STL" />
+      </geometry>
+      <material name="">
+        <color rgba="0.2 0.2 0.2 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://walker_c1_description/meshes/left_hand/L_index_mpp_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="L_index_mpp_joint" type="revolute">
+    <origin xyz="-0.012986 -0.037118 0.051002" rpy="0.020201 0.1132 0.0022821" />
+    <parent link="L_palm_link" />
+    <child link="L_index_mpp_link" />
+    <axis xyz="0 1 0" />
+    <limit lower="0" upper="1.46" effort="1.35" velocity="2.09" />
+  </joint>
+  <link name="L_index_ip_link">
+    <inertial>
+      <origin xyz="-0.0021758 2.5458E-06 0.016831" rpy="0 0 0" />
+      <mass value="0.011393" />
+      <inertia ixx="2.1048E-06" ixy="1.2862E-10" ixz="9.1709E-08" iyy="2.0193E-06" iyz="1.1268E-09" izz="3.1368E-07" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://walker_c1_description/meshes/left_hand/L_index_ip_link.STL" />
+      </geometry>
+      <material name="">
+        <color rgba="0.2 0.2 0.2 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://walker_c1_description/meshes/left_hand/L_index_ip_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="L_index_ip_joint" type="revolute">
+    <origin xyz="0 0 0.0388" rpy="0 0 0" />
+    <parent link="L_index_mpp_link" />
+    <child link="L_index_ip_link" />
+    <axis xyz="0 1 0" />
+    <limit lower="0" upper="1.62" effort="1.35" velocity="2.09" />
+  </joint>
+  <link name="L_middle_mpp_link">
+    <inertial>
+      <origin xyz="-0.0018706 0.00014105 0.014835" rpy="0 0 0" />
+      <mass value="0.013051" />
+      <inertia ixx="2.536E-06" ixy="6.3005E-11" ixz="5.758E-08" iyy="2.4063E-06" iyz="-1.4556E-09" izz="7.7382E-07" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://walker_c1_description/meshes/left_hand/L_middle_mpp_link.STL" />
+      </geometry>
+      <material name="">
+        <color rgba="0.2 0.2 0.2 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://walker_c1_description/meshes/left_hand/L_middle_mpp_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="L_middle_mpp_joint" type="revolute">
+    <origin xyz="-0.012986 -0.016702 0.051207" rpy="0 0.11322 0" />
+    <parent link="L_palm_link" />
+    <child link="L_middle_mpp_link" />
+    <axis xyz="0 1 0" />
+    <limit lower="0" upper="1.46" effort="1.35" velocity="2.09" />
+  </joint>
+  <link name="L_middle_ip_link">
+    <inertial>
+      <origin xyz="-0.0019757 -1.2656E-06 0.018575" rpy="0 0 0" />
+      <mass value="0.01252" />
+      <inertia ixx="2.6438E-06" ixy="1.0675E-10" ixz="1.0614E-07" iyy="2.5517E-06" iyz="1.2866E-09" izz="3.5251E-07" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://walker_c1_description/meshes/left_hand/L_middle_ip_link.STL" />
+      </geometry>
+      <material name="">
+        <color rgba="0.2 0.2 0.2 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://walker_c1_description/meshes/left_hand/L_middle_ip_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="L_middle_ip_joint" type="revolute">
+    <origin xyz="0 0 0.0388" rpy="0 0 0" />
+    <parent link="L_middle_mpp_link" />
+    <child link="L_middle_ip_link" />
+    <axis xyz="0 1 0" />
+    <limit lower="0" upper="1.62" effort="1.35" velocity="2.09" />
+  </joint>
+  <link name="L_ring_mpp_link">
+    <inertial>
+      <origin xyz="-0.0018706 0.0001434 0.014835" rpy="0 0 0" />
+      <mass value="0.013051" />
+      <inertia ixx="2.536E-06" ixy="5.5461E-11" ixz="5.7579E-08" iyy="2.4064E-06" iyz="-1.4562E-09" izz="7.7383E-07" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://walker_c1_description/meshes/left_hand/L_ring_mpp_link.STL" />
+      </geometry>
+      <material name="">
+        <color rgba="0.2 0.2 0.2 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://walker_c1_description/meshes/left_hand/L_ring_mpp_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="L_ring_mpp_joint" type="revolute">
+    <origin xyz="-0.012986 0.0037087 0.051002" rpy="-0.020201 0.1132 -0.0022821" />
+    <parent link="L_palm_link" />
+    <child link="L_ring_mpp_link" />
+    <axis xyz="0 1 0" />
+    <limit lower="0" upper="1.46" effort="1.35" velocity="2.09" />
+  </joint>
+  <link name="L_ring_ip_link">
+    <inertial>
+      <origin xyz="-0.0021758 3.2106E-06 0.016838" rpy="0 0 0" />
+      <mass value="0.011397" />
+      <inertia ixx="2.1069E-06" ixy="1.4463E-10" ixz="9.1786E-08" iyy="2.0214E-06" iyz="1.3343E-09" izz="3.1368E-07" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://walker_c1_description/meshes/left_hand/L_ring_ip_link.STL" />
+      </geometry>
+      <material name="">
+        <color rgba="0.2 0.2 0.2 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://walker_c1_description/meshes/left_hand/L_ring_ip_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="L_ring_ip_joint" type="revolute">
+    <origin xyz="0 0 0.0388" rpy="0 0 0" />
+    <parent link="L_ring_mpp_link" />
+    <child link="L_ring_ip_link" />
+    <axis xyz="0 1 0" />
+    <limit lower="0" upper="1.62" effort="1.35" velocity="2.09" />
+  </joint>
+  <link name="L_little_mpp_link">
+    <inertial>
+      <origin xyz="-0.0018706 0.00014109 0.014835" rpy="0 0 0" />
+      <mass value="0.013051" />
+      <inertia ixx="2.536E-06" ixy="5.5487E-11" ixz="5.7579E-08" iyy="2.4064E-06" iyz="-1.456E-09" izz="7.7383E-07" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://walker_c1_description/meshes/left_hand/L_little_mpp_link.STL" />
+      </geometry>
+      <material name="">
+        <color rgba="0.2 0.2 0.2 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://walker_c1_description/meshes/left_hand/L_little_mpp_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="L_little_mpp_joint" type="revolute">
+    <origin xyz="-0.012986 0.024116 0.050387" rpy="-0.040401 0.11313 -0.0045633" />
+    <parent link="L_palm_link" />
+    <child link="L_little_mpp_link" />
+    <axis xyz="-0.0045341 0.99919 0.039875" />
+    <limit lower="0" upper="1.46" effort="1.35" velocity="2.09" />
+  </joint>
+  <link name="L_little_ip_link">
+    <inertial>
+      <origin xyz="-0.0021538 -4.6466E-06 0.014068" rpy="0 0 0" />
+      <mass value="0.0099635" />
+      <inertia ixx="1.3455E-06" ixy="9.9876E-11" ixz="7.9878E-08" iyy="1.2858E-06" iyz="8.0731E-10" izz="2.5951E-07" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://walker_c1_description/meshes/left_hand/L_little_ip_link.STL" />
+      </geometry>
+      <material name="">
+        <color rgba="0.2 0.2 0.2 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://walker_c1_description/meshes/left_hand/L_little_ip_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="L_little_ip_joint" type="revolute">
+    <origin xyz="0 0 0.0388" rpy="0 0 0" />
+    <parent link="L_little_mpp_link" />
+    <child link="L_little_ip_link" />
+    <axis xyz="0 1 0" />
+    <limit lower="0" upper="1.62" effort="1.35" velocity="2.09" />
+  </joint>
+</robot>
