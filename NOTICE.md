@@ -3,9 +3,8 @@
 
 ## 1、许可
 
-除原始 USD 外，本包内容（含上述改动）按 Apache License 2.0 分发，许可证全文见 <http://www.apache.org/licenses/LICENSE-2.0>。
+本次未附加 Walker / Tienkung 包的机器人专用参数或许可证，本包内容按 Apache License 2.0 分发，许可证全文见 <http://www.apache.org/licenses/LICENSE-2.0>。
 
-本次未附加 Walker / Tienkung 包的机器人专用参数或许可证，使用Apache License 2.0分发。
 
 ## 2、免责与商标
 
