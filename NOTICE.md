@@ -3,6 +3,9 @@
 
 ## 1、许可
 
+身体来源于 `walker_astron_description`，左右手来源于 `ubt_left_hand_v3_lite_description`、`ubt_right_hand_v3_lite_description`。这三个源 ROS 包均在各自 `package.xml` 中声明 Apache License 2.0。
+本包保留源模型的关节和动力学参数，提供整机装配、显示配色、腕部视觉派生网格、MuJoCo 场景、查看入口和参数表。
+
 本次未附加 Walker / Tienkung 包的机器人专用参数或许可证，本包内容按 Apache License 2.0 分发，许可证全文见 <http://www.apache.org/licenses/LICENSE-2.0>。
 
 
@@ -19,10 +22,5 @@
 
 最后更新：2026-10-23
 
-
-# 资源来源与许可说明
-
-身体来源于 `walker_astron_description`，左右手来源于 `ubt_left_hand_v3_lite_description`、`ubt_right_hand_v3_lite_description`。这三个源 ROS 包均在各自 `package.xml` 中声明 Apache License 2.0。
-本包保留源模型的关节和动力学参数，提供整机装配、显示配色、腕部视觉派生网格、MuJoCo 场景、查看入口和参数表。
 
 
