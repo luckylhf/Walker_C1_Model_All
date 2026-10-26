@@ -21,6 +21,7 @@
 | `mujoco/walker_c1.xml` | 对应无手整机；含自由基座、地面 | 31 个力矩执行器 | 同无手版 |
 | `mujoco/walker_c1_with_hands.xml` | 对应带手整机；含自由基座、地面 | 53 个力矩执行器 | 同带手版 |
 | `usd/original/walker_astron_v1_sensorKpkd.usd` | 原始无手版本；含 5 个相机和 2 个 Isaac IMU | 身体 31 | 原始资产参数 |
+| `usd/generated/walker_c1_with_hands.usd` | 由带手 URDF 重建；含 5 个相机和 2 个 Isaac IMU | 53 | 同带手版 |
 
 整机以 `base_link` 为根；独立左右手分别以 `L_hand_base_link`、`R_hand_base_link` 为根，不包含整机腕部安装变换。URDF 长度单位为 m，关节角度为 rad。
 
@@ -34,12 +35,14 @@
 | `meshes/visual/` | 左右腕部视觉派生 STL，仅带手整机引用 |
 | `mujoco/` | 两份整机 XML 和 `meshes_collision/` 下的 58 个凸包 |
 | `usd/original/` | 原始主 USD、5 个子 USD 及附属文件 |
+| `usd/generated/` | 由 URDF 重建的单文件带手整机 USD |
 | `launch/`、`config/display.rviz` | ROS 2 显示入口和 RViz 配置 |
 | `config/hand_mounts.json` | 当前手部安装参数说明 |
 | `config/collision_exclusions.json` | MuJoCo 额外装配碰撞排除对及原因 |
 | `config/*_joints.json` | 关节/执行器顺序、home 姿态及源速度限位 |
 | `关键参数/` | 两份整机的 link、joint CSV 参数表 |
 | `script/view_mujoco.py` | MuJoCo 查看入口 |
+| `script/urdf2usd.py`、`script/augment_sensors.py` | URDF→USD 转换与传感器搬运 |
 | `docs/` | URDF、MuJoCo、USD 三张展示图 |
 
 URDF 网格统一引用 `package://walker_c1_description/meshes/...`，需要安装本 ROS 包，或在所用查看器中将该包名映射到本目录。无须安装额外的手部 ROS 包。MuJoCo 使用包内相对路径，可随整包移动；请勿只复制 XML 而遗漏网格目录。
@@ -127,17 +130,37 @@ DEVELOPER_DIR=/Library/Developer/CommandLineTools mjpython script/view_mujoco.py
 
 ## USD
 
-在 Isaac Sim 4.5 及以上版本中打开：
+两份 USD 均为 Z 轴向上、米制，在 Isaac Sim 4.5 及以上版本中打开。
+
+原始资产，原样收录：
 
 ```text
 usd/original/walker_astron_v1_sensorKpkd.usd
 ```
 
-USD 原样收录，保留 5 个相机和 2 个 Isaac IMU；仍为无手版本，不等同于带手 URDF 的装配变体。主文件依赖 `SubUSDs/` 中的 5 个子文件，移动时应保留整个目录结构。`OmniPBR.mdl` 由目标 Omniverse/Isaac 运行时提供；文件名中的 `astron` 和内部 prim 名称保留。
+保留 5 个相机和 2 个 Isaac IMU；仍为无手版本，不等同于带手 URDF 的装配变体。主文件依赖 `SubUSDs/` 中的 5 个子文件，移动时应保留整个目录结构。`OmniPBR.mdl` 由目标 Omniverse/Isaac 运行时提供；文件名中的 `astron` 和内部 prim 名称保留。
+
+自洽资产，由包内 URDF 重建：
+
+```text
+usd/generated/walker_c1_with_hands.usd
+```
+
+为单文件，默认 prim 是 `/walker_c1`，含 66 个刚体（质量、质心、惯量取自 URDF）、53 个转动关节、12 个固定关节、116 个网格（58 视觉 + 58 碰撞，碰撞为原始网格而非凸包），以及从原始资产搬运来的 5 个相机和 2 个 Isaac IMU。相机挂在 `head_pitch_link` 下，分别是 `head_stereo_left_Camera`、`head_stereo_right_Camera`、`head_fisheye_left_Camera`、`head_fisheye_right_Camera`、`head_jaw_Camera`；IMU 为 `body_imu/body_imu` 和 `head_imu/head_imu`。传感器位姿各写成一个 `xformOp:transform`，相对所属 link 的位姿与原始资产一致，最大分量差小于 `1e-7`。
+
+重建于包目录执行，依赖 `usd-core`，两步顺序不可交换：
+
+```bash
+python3 script/urdf2usd.py urdf/walker_c1_with_hands.urdf usd/generated/walker_c1_with_hands.usd
+python3 script/augment_sensors.py usd/original/walker_astron_v1_sensorKpkd.usd walker_astron_v1 \
+  usd/generated/walker_c1_with_hands.usd walker_c1
+```
+
+`urdf2usd.py` 会先删除已存在的目标文件，所以传感器必须在转换之后重新搬运，否则整机 USD 不含相机和 IMU。已知差异：生成 USD 不含材质绑定，网格以默认材质显示；原始相机的镜头畸变 API（`OmniLensDistortionOpenCvPinholeAPI`、`OmniLensDistortionOpenCvFisheyeAPI`）未随属性一起应用，`omni:lensdistortion:*` 参数仅作为普通属性保留；原始资产中的中间 Xform 层级已展平。
 
 ## 验证范围
 
-已完成 URDF 模型树、资源引用、参数表及配色核对，MuJoCo 编译/前向计算、URDF/MJCF 多姿态运动学与质量惯量一致性检查，以及短时被动步进检查。Mac MuJoCo 查看入口已确认可用；USD 已通过本地 OpenUSD 组合与依赖检查。
+已完成 URDF 模型树、资源引用、参数表及配色核对，MuJoCo 编译/前向计算、URDF/MJCF 多姿态运动学与质量惯量一致性检查，以及短时被动步进检查。Mac MuJoCo 查看入口已确认可用；USD 已通过本地 OpenUSD 组合与依赖检查，生成 USD 另外核对了默认 prim、刚体与关节数量、传感器路径及相对所属 link 的位姿。
 
 这些检查不等于站立稳定、长期动力学、抓取/足底接触精度或真机运行验收。ROS 2 构建与 RViz、目标 Isaac Sim 内的渲染和物理运行尚未完成运行验收。
 
