@@ -47,3 +47,6 @@ mujoco/*_log.txt
 # ---- 内部生成、核验工具仅供本地维护；客户保留查看入口 ----
 /script/*
 !/script/view_mujoco.py
+# 由 URDF 重建 USD 的转换链路，随包发布
+!/script/urdf2usd.py
+!/script/augment_sensors.py
