@@ -185,10 +185,46 @@
         <color rgba="0.2 0.2 0.2 1" />
       </material>
     </visual>
-    <collision>
-      <origin rpy="0 0 0" xyz="0 0 0" />
+    <collision name="foot_left_front_outer">
+      <origin xyz="0.085 -0.03 -0.046" rpy="0 1.5708 0" />
       <geometry>
-        <mesh filename="package://walker_c1_description/meshes/body/L_ankle_roll_link.STL" />
+        <cylinder radius="0.012" length="0.06" />
+      </geometry>
+    </collision>
+    <collision name="foot_left_front_inner">
+      <origin xyz="0.085 0.03 -0.046" rpy="0 1.5708 0" />
+      <geometry>
+        <cylinder radius="0.012" length="0.06" />
+      </geometry>
+    </collision>
+    <collision name="foot_left_mid_outer">
+      <origin xyz="0.045 -0.02 -0.046" rpy="0 -1.5708 0" />
+      <geometry>
+        <cylinder radius="0.01" length="0.20" />
+      </geometry>
+    </collision>
+    <collision name="foot_left_mid_inner">
+      <origin xyz="0.045 0.02 -0.046" rpy="0 -1.5708 0" />
+      <geometry>
+        <cylinder radius="0.01" length="0.20" />
+      </geometry>
+    </collision>
+    <collision name="foot_left_strip_outer">
+      <origin xyz="0.045 -0.01 -0.046" rpy="0 -1.5708 0" />
+      <geometry>
+        <cylinder radius="0.012" length="0.22" />
+      </geometry>
+    </collision>
+    <collision name="foot_left_strip_center">
+      <origin xyz="0.045 0 -0.046" rpy="0 -1.5708 0" />
+      <geometry>
+        <cylinder radius="0.012" length="0.24" />
+      </geometry>
+    </collision>
+    <collision name="foot_left_strip_inner">
+      <origin xyz="0.045 0.01 -0.046" rpy="0 -1.5708 0" />
+      <geometry>
+        <cylinder radius="0.012" length="0.22" />
       </geometry>
     </collision>
   </link>
@@ -387,10 +423,46 @@
         <color rgba="0.2 0.2 0.2 1" />
       </material>
     </visual>
-    <collision>
-      <origin rpy="0 0 0" xyz="0 0 0" />
+    <collision name="foot_right_front_outer">
+      <origin xyz="0.085 -0.03 -0.046" rpy="0 1.5708 0" />
       <geometry>
-        <mesh filename="package://walker_c1_description/meshes/body/R_ankle_roll_link.STL" />
+        <cylinder radius="0.012" length="0.06" />
+      </geometry>
+    </collision>
+    <collision name="foot_right_front_inner">
+      <origin xyz="0.085 0.03 -0.046" rpy="0 1.5708 0" />
+      <geometry>
+        <cylinder radius="0.012" length="0.06" />
+      </geometry>
+    </collision>
+    <collision name="foot_right_mid_outer">
+      <origin xyz="0.045 -0.02 -0.046" rpy="0 -1.5708 0" />
+      <geometry>
+        <cylinder radius="0.01" length="0.20" />
+      </geometry>
+    </collision>
+    <collision name="foot_right_mid_inner">
+      <origin xyz="0.045 0.02 -0.046" rpy="0 -1.5708 0" />
+      <geometry>
+        <cylinder radius="0.01" length="0.20" />
+      </geometry>
+    </collision>
+    <collision name="foot_right_strip_outer">
+      <origin xyz="0.045 -0.01 -0.046" rpy="0 -1.5708 0" />
+      <geometry>
+        <cylinder radius="0.012" length="0.22" />
+      </geometry>
+    </collision>
+    <collision name="foot_right_strip_center">
+      <origin xyz="0.045 0 -0.046" rpy="0 -1.5708 0" />
+      <geometry>
+        <cylinder radius="0.012" length="0.24" />
+      </geometry>
+    </collision>
+    <collision name="foot_right_strip_inner">
+      <origin xyz="0.045 0.01 -0.046" rpy="0 -1.5708 0" />
+      <geometry>
+        <cylinder radius="0.012" length="0.22" />
       </geometry>
     </collision>
   </link>
