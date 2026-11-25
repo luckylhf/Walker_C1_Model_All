@@ -149,11 +149,11 @@ C1 左右脚的原始 STL 主承重面位于各自踝 roll 坐标的 `Z = −50.
 
 ### 物理仿真与 Retarget 离线检查
 
-Isaac Sim 和 MuJoCo 使用同一套脚底胶囊参数。**脚部 STL 仅用于显示，保持碰撞关闭，每脚 7 根胶囊负责物理接触。**
+新版资产在 Isaac Sim 和 MuJoCo 中使用同一套脚底胶囊参数。**脚部可视网格的碰撞关闭，左右踝 roll 各由 7 根胶囊负责物理接触。**
 
-- **Isaac Sim / Isaac Lab**。URDF 1.0 用 `<cylinder>` 保存胶囊半径和直段长度。用 Isaac Lab 2.1 从 URDF 导入训练资产时，在 `UrdfFileCfg` 中启用 `replace_cylinders_with_capsules=True`。导入生成 USD 后，核对每只踝部有 7 个启用碰撞的 `Capsule`。本包的 `usd/generated/walker_c1_with_hands.usd` 已包含原生胶囊，可直接加载。[Isaac Lab 2.1 导入源码](https://github.com/isaac-sim/IsaacLab/blob/v2.1.0/source/isaaclab/isaaclab/sim/converters/urdf_converter.py#L119-L120)
-- **MuJoCo**。无手、灵巧手和假手三份 MJCF 都直接使用原生 `capsule`。`size` 依次是半径和直段半长。包内转换脚本按 URDF 碰撞节点中的注释识别胶囊直段。
-- **Retarget**。从脚部可视网格构建整脚凸包，用于离线检查落脚高度、脚地穿透、脚与平台碰撞，以及全身自碰模式下的脚与脚、脚与腿碰撞。离线配对明确排除脚底圆柱和胶囊，因此胶囊局部突出或内收都不会改变这些检查的判定。
+- **Isaac Sim / Isaac Lab**。URDF 1.0 用 `<cylinder>` 保存胶囊半径和直段长度。用 Isaac Lab 2.1 从 URDF 导入训练资产时，在 `UrdfFileCfg` 中启用 `replace_cylinders_with_capsules=True`。导入生成 USD 后，核对每只踝部有 7 个启用碰撞的 `Capsule`。本包的 `usd/generated/walker_c1_with_hands.usd` 已包含原生胶囊，可直接加载。`usd/original/` 中的参考资产保留其自身的碰撞配置。[Isaac Lab 2.1 导入源码](https://github.com/isaac-sim/IsaacLab/blob/v2.1.0/source/isaaclab/isaaclab/sim/converters/urdf_converter.py#L119-L120)
+- **MuJoCo**。无手、灵巧手和假手三份 MJCF 均已移除左右踝旧碰撞凸包的 `<asset>` 声明。脚部原始 STL 仅由关闭碰撞的 `visual` 几何引用。物理接触由 MJCF 中的原生 `capsule` 计算，`size` 依次是半径和直段半长。
+- **Retarget**。从脚部可视网格构建整脚凸包，用于离线检查落脚高度、脚地穿透、脚与平台碰撞，以及全身自碰模式下的脚与脚、脚与腿碰撞。离线检查按整脚凸包计算，并显式排除鞋底圆柱和胶囊，因此判定不依赖胶囊是否完全位于凸包内。
 
 ## USD
 
