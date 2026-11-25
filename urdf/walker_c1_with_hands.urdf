@@ -186,45 +186,52 @@
       </material>
     </visual>
     <collision name="foot_left_front_outer">
-      <origin xyz="0.085 -0.03 -0.046" rpy="0 1.5708 0" />
+      <!-- C1 sole capsule core. The cylinder length excludes the hemispherical ends. -->
+      <origin xyz="0.0955 -0.041 -0.039" rpy="0 1.570796326794897 0" />
       <geometry>
-        <cylinder radius="0.012" length="0.06" />
+        <cylinder radius="0.0115" length="0.058" />
       </geometry>
     </collision>
     <collision name="foot_left_front_inner">
-      <origin xyz="0.085 0.03 -0.046" rpy="0 1.5708 0" />
+      <!-- C1 sole capsule core. The cylinder length excludes the hemispherical ends. -->
+      <origin xyz="0.09575 0.041 -0.039" rpy="0 1.570796326794897 0" />
       <geometry>
-        <cylinder radius="0.012" length="0.06" />
+        <cylinder radius="0.0115" length="0.0575" />
       </geometry>
     </collision>
     <collision name="foot_left_mid_outer">
-      <origin xyz="0.045 -0.02 -0.046" rpy="0 -1.5708 0" />
+      <!-- C1 sole capsule core. The cylinder length excludes the hemispherical ends. -->
+      <origin xyz="0.0425 -0.036 -0.039" rpy="0 1.570796326794897 0" />
       <geometry>
-        <cylinder radius="0.01" length="0.20" />
+        <cylinder radius="0.0115" length="0.2" />
       </geometry>
     </collision>
     <collision name="foot_left_mid_inner">
-      <origin xyz="0.045 0.02 -0.046" rpy="0 -1.5708 0" />
+      <!-- C1 sole capsule core. The cylinder length excludes the hemispherical ends. -->
+      <origin xyz="0.04275 0.036 -0.039" rpy="0 1.570796326794897 0" />
       <geometry>
-        <cylinder radius="0.01" length="0.20" />
+        <cylinder radius="0.0115" length="0.1985" />
       </geometry>
     </collision>
     <collision name="foot_left_strip_outer">
-      <origin xyz="0.045 -0.01 -0.046" rpy="0 -1.5708 0" />
+      <!-- C1 sole capsule core. The cylinder length excludes the hemispherical ends. -->
+      <origin xyz="0.047 -0.021 -0.039" rpy="0 1.570796326794897 0" />
       <geometry>
-        <cylinder radius="0.012" length="0.22" />
+        <cylinder radius="0.0115" length="0.228" />
       </geometry>
     </collision>
     <collision name="foot_left_strip_center">
-      <origin xyz="0.045 0 -0.046" rpy="0 -1.5708 0" />
+      <!-- C1 sole capsule core. The cylinder length excludes the hemispherical ends. -->
+      <origin xyz="0.049 0 -0.039" rpy="0 1.570796326794897 0" />
       <geometry>
-        <cylinder radius="0.012" length="0.24" />
+        <cylinder radius="0.0115" length="0.236" />
       </geometry>
     </collision>
     <collision name="foot_left_strip_inner">
-      <origin xyz="0.045 0.01 -0.046" rpy="0 -1.5708 0" />
+      <!-- C1 sole capsule core. The cylinder length excludes the hemispherical ends. -->
+      <origin xyz="0.0475 0.021 -0.039" rpy="0 1.570796326794897 0" />
       <geometry>
-        <cylinder radius="0.012" length="0.22" />
+        <cylinder radius="0.0115" length="0.228" />
       </geometry>
     </collision>
   </link>
@@ -424,45 +431,52 @@
       </material>
     </visual>
     <collision name="foot_right_front_outer">
-      <origin xyz="0.085 -0.03 -0.046" rpy="0 1.5708 0" />
+      <!-- C1 sole capsule core. The cylinder length excludes the hemispherical ends. -->
+      <origin xyz="0.0955 -0.041 -0.039" rpy="0 1.570796326794897 0" />
       <geometry>
-        <cylinder radius="0.012" length="0.06" />
+        <cylinder radius="0.0115" length="0.058" />
       </geometry>
     </collision>
     <collision name="foot_right_front_inner">
-      <origin xyz="0.085 0.03 -0.046" rpy="0 1.5708 0" />
+      <!-- C1 sole capsule core. The cylinder length excludes the hemispherical ends. -->
+      <origin xyz="0.09575 0.041 -0.039" rpy="0 1.570796326794897 0" />
       <geometry>
-        <cylinder radius="0.012" length="0.06" />
+        <cylinder radius="0.0115" length="0.0575" />
       </geometry>
     </collision>
     <collision name="foot_right_mid_outer">
-      <origin xyz="0.045 -0.02 -0.046" rpy="0 -1.5708 0" />
+      <!-- C1 sole capsule core. The cylinder length excludes the hemispherical ends. -->
+      <origin xyz="0.0425 -0.036 -0.039" rpy="0 1.570796326794897 0" />
       <geometry>
-        <cylinder radius="0.01" length="0.20" />
+        <cylinder radius="0.0115" length="0.2" />
       </geometry>
     </collision>
     <collision name="foot_right_mid_inner">
-      <origin xyz="0.045 0.02 -0.046" rpy="0 -1.5708 0" />
+      <!-- C1 sole capsule core. The cylinder length excludes the hemispherical ends. -->
+      <origin xyz="0.04275 0.036 -0.039" rpy="0 1.570796326794897 0" />
       <geometry>
-        <cylinder radius="0.01" length="0.20" />
+        <cylinder radius="0.0115" length="0.1985" />
       </geometry>
     </collision>
     <collision name="foot_right_strip_outer">
-      <origin xyz="0.045 -0.01 -0.046" rpy="0 -1.5708 0" />
+      <!-- C1 sole capsule core. The cylinder length excludes the hemispherical ends. -->
+      <origin xyz="0.047 -0.021 -0.039" rpy="0 1.570796326794897 0" />
       <geometry>
-        <cylinder radius="0.012" length="0.22" />
+        <cylinder radius="0.0115" length="0.228" />
       </geometry>
     </collision>
     <collision name="foot_right_strip_center">
-      <origin xyz="0.045 0 -0.046" rpy="0 -1.5708 0" />
+      <!-- C1 sole capsule core. The cylinder length excludes the hemispherical ends. -->
+      <origin xyz="0.049 0 -0.039" rpy="0 1.570796326794897 0" />
       <geometry>
-        <cylinder radius="0.012" length="0.24" />
+        <cylinder radius="0.0115" length="0.236" />
       </geometry>
     </collision>
     <collision name="foot_right_strip_inner">
-      <origin xyz="0.045 0.01 -0.046" rpy="0 -1.5708 0" />
+      <!-- C1 sole capsule core. The cylinder length excludes the hemispherical ends. -->
+      <origin xyz="0.0475 0.021 -0.039" rpy="0 1.570796326794897 0" />
       <geometry>
-        <cylinder radius="0.012" length="0.22" />
+        <cylinder radius="0.0115" length="0.228" />
       </geometry>
     </collision>
   </link>

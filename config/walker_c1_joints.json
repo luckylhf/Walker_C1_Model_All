@@ -65,7 +65,7 @@
     "head_yaw_joint": 0.0,
     "head_pitch_joint": 0.0
   },
-  "base_height": 0.9201846809352716,
+  "base_height": 0.9192512752711351,
   "actuation": "independent torque motors; no physical tendon coupling specified",
   "velocity_limits": {
     "L_hip_pitch_joint": 10.47,

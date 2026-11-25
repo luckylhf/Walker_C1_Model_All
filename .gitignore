@@ -43,10 +43,12 @@ mujoco/*_log.txt
 !/docs/1、URDF-C1.png
 !/docs/2、Mujoco-C1.png
 !/docs/3、USD-C1.png
+!/docs/4、C1左脚_胶囊碰撞_示意图.png
 
 # ---- 内部生成、核验工具仅供本地维护；客户保留查看入口 ----
 /script/*
 !/script/view_mujoco.py
 # 由 URDF 重建 USD 的转换链路，随包发布
 !/script/urdf2usd.py
+!/script/foot_collisions.py
 !/script/augment_sensors.py

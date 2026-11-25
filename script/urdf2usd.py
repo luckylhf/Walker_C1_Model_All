@@ -14,6 +14,8 @@ import xml.etree.ElementTree as ET
 import numpy as np
 from pxr import Gf, Sdf, Usd, UsdGeom, UsdPhysics, Vt
 
+from foot_collisions import is_capsule_core
+
 AXES = 'XYZ'
 
 
@@ -43,13 +45,6 @@ def mat_row(Rc, t):
         m.SetRow(i, Gf.Vec4d(float(Rc[0][i]), float(Rc[1][i]), float(Rc[2][i]), 0.0))
     m.SetRow(3, Gf.Vec4d(float(t[0]), float(t[1]), float(t[2]), 1.0))
     return m
-
-
-def rot180_about(v):
-    """绕任意单位向量旋转 180° 的 3x3（列约定）"""
-    v = np.array(v, dtype=float)
-    v /= np.linalg.norm(v)
-    return 2.0 * np.outer(v, v) - np.eye(3)
 
 
 def to_quatf(q):
@@ -115,7 +110,8 @@ def resolve_mesh(urdf_dir, filename):
 # ---------------------------------------------------------------- 转换
 def convert(urdf_path, usd_path, root_name='walker_c1'):
     urdf_dir = os.path.dirname(os.path.abspath(urdf_path))
-    r = ET.parse(urdf_path).getroot()
+    parser = ET.XMLParser(target=ET.TreeBuilder(insert_comments=True))
+    r = ET.parse(urdf_path, parser=parser).getroot()
     links = {l.get('name'): l for l in r.findall('link')}
     joints = r.findall('joint')
 
@@ -213,6 +209,16 @@ def convert(urdf_path, usd_path, root_name='walker_c1'):
                     prim = UsdGeom.Cube.Define(stage, gp)
                     prim.CreateSizeAttr(1.0)
                     UsdGeom.Xformable(prim).AddScaleOp().Set(Gf.Vec3f(sx, sy, sz))
+                elif child.tag == 'cylinder' and is_capsule_core(e):
+                    prim = UsdGeom.Capsule.Define(stage, gp)
+                    prim.CreateRadiusAttr(float(child.get('radius')))
+                    prim.CreateHeightAttr(float(child.get('length')))
+                    prim.CreateAxisAttr(UsdGeom.Tokens.z)
+                    origin = e.find('origin')
+                    xyz = vec(origin.get('xyz')) if origin is not None else np.zeros(3)
+                    rpy = vec(origin.get('rpy')) if origin is not None else np.zeros(3)
+                    UsdGeom.Xformable(prim).AddTransformOp().Set(mat_row(rot_xyz(*rpy), xyz))
+                    prim.CreateExtentAttr(prim.ComputeExtent(Usd.TimeCode.Default()))
                 elif child.tag == 'cylinder':
                     rad = float(child.get('radius'))
                     ln = float(child.get('length'))
@@ -234,20 +240,17 @@ def convert(urdf_path, usd_path, root_name='walker_c1'):
         parent = j.find('parent').get('link')
         child = j.find('child').get('link')
         path = f"/{root_name}/joints/{j.get('name')}"
-        L = W[child] * W[parent].GetInverse()          # 行向量：W_child = L * W_parent
-
+        axis_frame = Gf.Matrix4d(1.0)
         if jtype in ('revolute', 'continuous', 'prismatic'):
             ax = j.find('axis')
             axis = vec(ax.get('xyz')) if ax is not None else np.array([1.0, 0, 0])
             axis = axis / np.linalg.norm(axis)
             idx = int(np.argmax(np.abs(axis)))
-            sign = 1.0 if axis[idx] > 0 else -1.0
-            if sign > 0:
-                E = np.eye(3)
-            else:
-                perp = [0.0, 0.0, 0.0]
-                perp[(idx + 1) % 3] = 1.0
-                E = rot180_about(perp)
+            # The USD axis token selects a positive axis in the joint frame.
+            # Orient that frame to reproduce the exact signed axis from the URDF.
+            basis = Gf.Vec3d(0.0)
+            basis[idx] = 1.0
+            axis_frame.SetRotate(Gf.Rotation(basis, Gf.Vec3d(*[float(v) for v in axis])))
             if jtype == 'prismatic':
                 jp = UsdPhysics.PrismaticJoint.Define(stage, path)
             else:
@@ -259,8 +262,7 @@ def convert(urdf_path, usd_path, root_name='walker_c1'):
                 hi = float(lim.get('upper'))
                 if jtype == 'revolute':
                     lo, hi = math.degrees(lo), math.degrees(hi)
-                if sign < 0:
-                    lo, hi = -hi, -lo
+                # The joint frame already encodes the signed URDF axis.
                 jp.CreateLowerLimitAttr(lo)
                 jp.CreateUpperLimitAttr(hi)
                 eff = lim.get('effort')
@@ -270,13 +272,13 @@ def convert(urdf_path, usd_path, root_name='walker_c1'):
                     d.CreateMaxForceAttr(float(eff))
         elif jtype == 'fixed':
             jp = UsdPhysics.FixedJoint.Define(stage, path)
-            E = np.eye(3)
         else:
             continue
 
-        W_J = mat_row(E, np.zeros(3)) * W[child]      # 绕子体原点旋转得到关节帧
-        T0 = W[parent].GetInverse() * W_J
-        T1 = W[child].GetInverse() * W_J
+        W_J = axis_frame * W[child]
+        # Gf uses row vectors: joint_local * body_world = joint_world.
+        T0 = W_J * W[parent].GetInverse()
+        T1 = W_J * W[child].GetInverse()
         jp.CreateBody0Rel().SetTargets([Sdf.Path(f'/{root_name}/{parent}')])
         jp.CreateBody1Rel().SetTargets([Sdf.Path(f'/{root_name}/{child}')])
         p0 = T0.ExtractTranslation()

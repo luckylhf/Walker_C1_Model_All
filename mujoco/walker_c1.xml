@@ -24,7 +24,6 @@
     <mesh name="visual_10" file="meshes/body/L_ankle_pitch_link.STL" scale="1 1 1" />
     <mesh name="collision_11" file="mujoco/meshes_collision/body/L_ankle_pitch_link.STL" scale="1 1 1" />
     <mesh name="visual_12" file="meshes/body/L_ankle_roll_link.STL" scale="1 1 1" />
-    <mesh name="collision_13" file="mujoco/meshes_collision/body/L_ankle_roll_link.STL" scale="1 1 1" />
     <mesh name="visual_14" file="meshes/body/R_hip_pitch_link.STL" scale="1 1 1" />
     <mesh name="collision_15" file="mujoco/meshes_collision/body/R_hip_pitch_link.STL" scale="1 1 1" />
     <mesh name="visual_16" file="meshes/body/R_hip_roll_link.STL" scale="1 1 1" />
@@ -36,7 +35,6 @@
     <mesh name="visual_22" file="meshes/body/R_ankle_pitch_link.STL" scale="1 1 1" />
     <mesh name="collision_23" file="mujoco/meshes_collision/body/R_ankle_pitch_link.STL" scale="1 1 1" />
     <mesh name="visual_24" file="meshes/body/R_ankle_roll_link.STL" scale="1 1 1" />
-    <mesh name="collision_25" file="mujoco/meshes_collision/body/R_ankle_roll_link.STL" scale="1 1 1" />
     <mesh name="visual_26" file="meshes/body/waist_yaw_link.STL" scale="1 1 1" />
     <mesh name="collision_27" file="mujoco/meshes_collision/body/waist_yaw_link.STL" scale="1 1 1" />
     <mesh name="visual_28" file="meshes/body/waist_pitch_link.STL" scale="1 1 1" />
@@ -81,7 +79,7 @@
   </asset>
   <worldbody>
     <geom name="floor" type="plane" size="0 0 0.1" rgba="1 1 1 1" friction="0.8 0.005 0.0001" material="c1_scene_floor" />
-    <body name="base_link" pos="0 0 0.9201846809352716" quat="1 0 0 0">
+    <body name="base_link" pos="0 0 0.9192512752711351" quat="1 0 0 0">
       <freejoint name="floating_base" />
       <inertial pos="-0.00060742 0 -0.00390464" mass="5.32923152" fullinertia="0.02561815 0.01751097 0.02397466 3.016e-05 -1.012e-05 -2.5e-07" />
       <geom name="base_link_visual_0" class="visual" pos="0 0 0" quat="1 0 0 0" mesh="visual_0" rgba="1 1 1 1" />
@@ -115,13 +113,13 @@
                   <joint name="L_ankle_roll_joint" type="hinge" axis="1 0 0" range="-0.401 0.401" damping="0" armature="0" />
                   <inertial pos="0.03406324 2.02e-06 -0.020996" mass="0.82687057" fullinertia="0.0009915799999999999 0.00442435 0.00489724 -1.9e-07 0.0002988 -2e-08" />
                   <geom name="L_ankle_roll_link_visual_0" class="visual" pos="0 0 0" quat="1 0 0 0" mesh="visual_12" rgba="0.2 0.2 0.2 1" />
-                  <geom name="L_ankle_roll_link_collision_0" pos="0.085 -0.03 -0.046" quat="0.707105 0 0.707108 0" type="cylinder" size="0.012 0.03" class="collision" />
-                  <geom name="L_ankle_roll_link_collision_1" pos="0.085 0.03 -0.046" quat="0.707105 0 0.707108 0" type="cylinder" size="0.012 0.03" class="collision" />
-                  <geom name="L_ankle_roll_link_collision_2" pos="0.045 -0.02 -0.046" quat="0.707105 0 -0.707108 0" type="cylinder" size="0.01 0.1" class="collision" />
-                  <geom name="L_ankle_roll_link_collision_3" pos="0.045 0.02 -0.046" quat="0.707105 0 -0.707108 0" type="cylinder" size="0.01 0.1" class="collision" />
-                  <geom name="L_ankle_roll_link_collision_4" pos="0.045 -0.01 -0.046" quat="0.707105 0 -0.707108 0" type="cylinder" size="0.012 0.11" class="collision" />
-                  <geom name="L_ankle_roll_link_collision_5" pos="0.045 0 -0.046" quat="0.707105 0 -0.707108 0" type="cylinder" size="0.012 0.12" class="collision" />
-                  <geom name="L_ankle_roll_link_collision_6" pos="0.045 0.01 -0.046" quat="0.707105 0 -0.707108 0" type="cylinder" size="0.012 0.11" class="collision" />
+                  <geom name="L_ankle_roll_link_collision_0" class="collision" pos="0.0955 -0.041 -0.039" quat="0.7071067811865474 0 0.7071067811865477 0" type="capsule" size="0.0115 0.029" />
+                  <geom name="L_ankle_roll_link_collision_1" class="collision" pos="0.09575 0.041 -0.039" quat="0.7071067811865474 0 0.7071067811865477 0" type="capsule" size="0.0115 0.02875" />
+                  <geom name="L_ankle_roll_link_collision_2" class="collision" pos="0.0425 -0.036 -0.039" quat="0.7071067811865474 0 0.7071067811865477 0" type="capsule" size="0.0115 0.1" />
+                  <geom name="L_ankle_roll_link_collision_3" class="collision" pos="0.04275 0.036 -0.039" quat="0.7071067811865474 0 0.7071067811865477 0" type="capsule" size="0.0115 0.09925" />
+                  <geom name="L_ankle_roll_link_collision_4" class="collision" pos="0.047 -0.021 -0.039" quat="0.7071067811865474 0 0.7071067811865477 0" type="capsule" size="0.0115 0.114" />
+                  <geom name="L_ankle_roll_link_collision_5" class="collision" pos="0.049 0 -0.039" quat="0.7071067811865474 0 0.7071067811865477 0" type="capsule" size="0.0115 0.118" />
+                  <geom name="L_ankle_roll_link_collision_6" class="collision" pos="0.0475 0.021 -0.039" quat="0.7071067811865474 0 0.7071067811865477 0" type="capsule" size="0.0115 0.114" />
                   <body name="L_foot_ft_link" pos="0 0 0" quat="1 0 0 0">
                     <inertial pos="0 0 0" mass="5e-05" fullinertia="5e-11 5e-11 1e-10 0 0 0" />
                     <geom name="L_foot_ft_link_visual_0" class="visual" pos="0 0 0" quat="1 0 0 0" type="cylinder" size="0.01 0.005" rgba="1 1 1 1" />
@@ -161,13 +159,13 @@
                   <joint name="R_ankle_roll_joint" type="hinge" axis="1 0 0" range="-0.401 0.401" damping="0" armature="0" />
                   <inertial pos="0.03406324 2.02e-06 -0.020996" mass="0.82687057" fullinertia="0.0009915799999999999 0.00442435 0.00489724 -1.9e-07 0.0002988 -2e-08" />
                   <geom name="R_ankle_roll_link_visual_0" class="visual" pos="0 0 0" quat="1 0 0 0" mesh="visual_24" rgba="0.2 0.2 0.2 1" />
-                  <geom name="R_ankle_roll_link_collision_0" pos="0.085 -0.03 -0.046" quat="0.707105 0 0.707108 0" type="cylinder" size="0.012 0.03" class="collision" />
-                  <geom name="R_ankle_roll_link_collision_1" pos="0.085 0.03 -0.046" quat="0.707105 0 0.707108 0" type="cylinder" size="0.012 0.03" class="collision" />
-                  <geom name="R_ankle_roll_link_collision_2" pos="0.045 -0.02 -0.046" quat="0.707105 0 -0.707108 0" type="cylinder" size="0.01 0.1" class="collision" />
-                  <geom name="R_ankle_roll_link_collision_3" pos="0.045 0.02 -0.046" quat="0.707105 0 -0.707108 0" type="cylinder" size="0.01 0.1" class="collision" />
-                  <geom name="R_ankle_roll_link_collision_4" pos="0.045 -0.01 -0.046" quat="0.707105 0 -0.707108 0" type="cylinder" size="0.012 0.11" class="collision" />
-                  <geom name="R_ankle_roll_link_collision_5" pos="0.045 0 -0.046" quat="0.707105 0 -0.707108 0" type="cylinder" size="0.012 0.12" class="collision" />
-                  <geom name="R_ankle_roll_link_collision_6" pos="0.045 0.01 -0.046" quat="0.707105 0 -0.707108 0" type="cylinder" size="0.012 0.11" class="collision" />
+                  <geom name="R_ankle_roll_link_collision_0" class="collision" pos="0.0955 -0.041 -0.039" quat="0.7071067811865474 0 0.7071067811865477 0" type="capsule" size="0.0115 0.029" />
+                  <geom name="R_ankle_roll_link_collision_1" class="collision" pos="0.09575 0.041 -0.039" quat="0.7071067811865474 0 0.7071067811865477 0" type="capsule" size="0.0115 0.02875" />
+                  <geom name="R_ankle_roll_link_collision_2" class="collision" pos="0.0425 -0.036 -0.039" quat="0.7071067811865474 0 0.7071067811865477 0" type="capsule" size="0.0115 0.1" />
+                  <geom name="R_ankle_roll_link_collision_3" class="collision" pos="0.04275 0.036 -0.039" quat="0.7071067811865474 0 0.7071067811865477 0" type="capsule" size="0.0115 0.09925" />
+                  <geom name="R_ankle_roll_link_collision_4" class="collision" pos="0.047 -0.021 -0.039" quat="0.7071067811865474 0 0.7071067811865477 0" type="capsule" size="0.0115 0.114" />
+                  <geom name="R_ankle_roll_link_collision_5" class="collision" pos="0.049 0 -0.039" quat="0.7071067811865474 0 0.7071067811865477 0" type="capsule" size="0.0115 0.118" />
+                  <geom name="R_ankle_roll_link_collision_6" class="collision" pos="0.0475 0.021 -0.039" quat="0.7071067811865474 0 0.7071067811865477 0" type="capsule" size="0.0115 0.114" />
                   <body name="R_foot_ft_link" pos="0 0 0" quat="1 0 0 0">
                     <inertial pos="0 0 0" mass="5e-05" fullinertia="5e-11 5e-11 1e-10 0 0 0" />
                     <geom name="R_foot_ft_link_visual_0" class="visual" pos="0 0 0" quat="1 0 0 0" type="cylinder" size="0.01 0.005" rgba="1 1 1 1" />
@@ -399,6 +397,6 @@
     <framequat name="head_imu_quat" objtype="site" objname="head_imu_site" />
   </sensor>
   <keyframe>
-    <key name="home" qpos="0 0 0.9201846809352716 1 0 0 0 0 0 0 0.08 0 0 0 0 0 0.08 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0" />
+    <key name="home" qpos="0 0 0.9192512752711351 1 0 0 0 0 0 0 0.08 0 0 0 0 0 0.08 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0" />
   </keyframe>
 </mujoco>
