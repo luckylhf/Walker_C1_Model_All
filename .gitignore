@@ -32,6 +32,7 @@ venv/
 # ---- 仿真缓存 ----
 *.blend1
 mujoco/*_log.txt
+training/
 
 # ---- 本机查看入口，不随客户版本交付 ----
 /查看带手MuJoCo.command
