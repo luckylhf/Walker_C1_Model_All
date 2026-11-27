@@ -50,5 +50,6 @@ mujoco/*_log.txt
 !/script/view_mujoco.py
 # 由 URDF 重建 USD 的转换链路，随包发布
 !/script/urdf2usd.py
+!/script/model_inertials.py
 !/script/foot_collisions.py
 !/script/augment_sensors.py

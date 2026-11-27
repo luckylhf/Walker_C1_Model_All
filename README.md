@@ -46,7 +46,8 @@
 | `config/*_joints.json` | 关节/执行器顺序、home 姿态及源速度限位 |
 | `关键参数/` | 无手版和灵巧手版的 link、joint CSV 参数表 |
 | `script/view_mujoco.py` | MuJoCo 查看入口 |
-| `script/urdf2usd.py`、`script/foot_collisions.py`、`script/augment_sensors.py` | URDF→USD 转换、C1 脚底布局与传感器搬运 |
+| `script/urdf2usd.py`、`script/model_inertials.py` | URDF→USD 转换与惯性校验 |
+| `script/foot_collisions.py`、`script/augment_sensors.py` | C1 脚底布局与传感器搬运 |
 | `docs/` | URDF、MuJoCo、USD 展示图和脚底碰撞示意图 |
 
 URDF 网格统一引用 `package://walker_c1_description/meshes/...`，需要安装本 ROS 包，或在所用查看器中将该包名映射到本目录。无须安装额外的手部 ROS 包。MuJoCo 使用包内相对路径，可随整包移动；请勿只复制 XML 而遗漏网格目录。
@@ -185,7 +186,9 @@ python3 script/augment_sensors.py usd/original/walker_astron_v1_sensorKpkd.usd w
   usd/generated/walker_c1_with_hands.usd walker_c1
 ```
 
-`urdf2usd.py` 会先删除已存在的目标文件，所以传感器必须在转换之后重新搬运，否则整机 USD 不含相机和 IMU。已知差异：生成 USD 不含材质绑定，网格以默认材质显示；原始相机的镜头畸变 API（`OmniLensDistortionOpenCvPinholeAPI`、`OmniLensDistortionOpenCvFisheyeAPI`）未随属性一起应用，`omni:lensdistortion:*` 参数仅作为普通属性保留；原始资产中的中间 Xform 层级已展平。
+`urdf2usd.py` 要求每个连杆恰有一组完整惯性且质量为正，所有引用的网格均可读取。脚本会重新打开暂存的 USD，校验刚体覆盖、逐连杆质量、质心、惯性张量和总质量，再替换目标文件。遇到缺失资源或校验失败时，旧文件保持原样。转换成功后，第二条命令负责搬运相机和 IMU。
+
+已知差异：生成 USD 不含材质绑定，网格以默认材质显示；原始相机的镜头畸变 API（`OmniLensDistortionOpenCvPinholeAPI`、`OmniLensDistortionOpenCvFisheyeAPI`）未随属性一起应用，`omni:lensdistortion:*` 参数仅作为普通属性保留；原始资产中的中间 Xform 层级已展平。
 
 ## 验证范围
 

@@ -9,29 +9,20 @@ import math
 import os
 import struct
 import sys
+import tempfile
 import xml.etree.ElementTree as ET
+from pathlib import Path
 
 import numpy as np
-from pxr import Gf, Sdf, Usd, UsdGeom, UsdPhysics, Vt
+from pxr import Gf, Sdf, Tf, Usd, UsdGeom, UsdPhysics, Vt
 
 from foot_collisions import is_capsule_core
+from model_inertials import check_body_coverage, read_inertials, rot_xyz
 
 AXES = 'XYZ'
 
 
 # ---------------------------------------------------------------- 基础数学
-def rot_xyz(r, p, y):
-    """URDF rpy -> 3x3 列向量约定矩阵 (R = Rz(y)Ry(p)Rx(r))"""
-    cr, sr = math.cos(r), math.sin(r)
-    cp, sp = math.cos(p), math.sin(p)
-    cy, sy = math.cos(y), math.sin(y)
-    return np.array([
-        [cy * cp, cy * sp * sr - sy * cr, cy * sp * cr + sy * sr],
-        [sy * cp, sy * sp * sr + cy * cr, sy * sp * cr - cy * sr],
-        [-sp,     cp * sr,                cp * cr],
-    ])
-
-
 def vec(s, default=(0.0, 0.0, 0.0)):
     if s is None:
         return np.array(default, dtype=float)
@@ -107,11 +98,55 @@ def resolve_mesh(urdf_dir, filename):
     return None
 
 
+def validate_usd_inertials(stage, expected):
+    bodies = [prim for prim in stage.Traverse() if prim.HasAPI(UsdPhysics.RigidBodyAPI)]
+    check_body_coverage(expected, [body.GetName() for body in bodies], 'USD')
+    masses = []
+    for body in bodies:
+        name = body.GetName()
+        api = UsdPhysics.MassAPI(body)
+        if not api:
+            raise ValueError(f'USD body {name!r} has no MassAPI')
+        attrs = (api.GetMassAttr(), api.GetCenterOfMassAttr(), api.GetDiagonalInertiaAttr(), api.GetPrincipalAxesAttr())
+        if not all(attr.HasAuthoredValueOpinion() for attr in attrs):
+            raise ValueError(f'USD body {name!r} has incomplete inertia attributes')
+        mass, com, diagonal, axes = (attr.Get() for attr in attrs)
+        rotation = np.asarray(Gf.Matrix3d().SetRotate(Gf.Quatd(axes))).T
+        tensor = (rotation * np.asarray(diagonal)) @ rotation.T
+        source_mass, source_com, source_tensor = expected[name]
+        for label, actual, source, atol, rtol in (
+            ('mass', mass, source_mass, 0, 2e-7),
+            ('center of mass', np.asarray(com), source_com, 1e-12, 2e-7),
+            # USD stores the diagonal and principal axes as float32.
+            ('inertia tensor', tensor, source_tensor, 1e-12 + 1e-6 * np.abs(source_tensor).max(), 0),
+        ):
+            if not np.allclose(actual, source, atol=atol, rtol=rtol):
+                raise ValueError(f'USD body {name!r}: {label} {actual} differs from URDF {source}')
+        masses.append(mass)
+    actual_mass = math.fsum(masses)
+    source_mass = math.fsum(mass for mass, _, _ in expected.values())
+    if not math.isclose(actual_mass, source_mass, rel_tol=2e-7):
+        raise ValueError(f'USD total mass {actual_mass:.12g} kg differs from URDF {source_mass:.12g} kg')
+
+
+def validate_exported_usd(path, expected):
+    # Keep the staged layer out of caller caches and release it before replacement.
+    with Usd.StageCacheContext(Usd.BlockStageCaches):
+        try:
+            stage = Usd.Stage.Open(str(path))
+        except Tf.ErrorException as exc:
+            raise OSError(f'Could not reopen staged USD: {path}') from exc
+        if stage is None:
+            raise OSError(f'Could not reopen staged USD: {path}')
+        validate_usd_inertials(stage, expected)
+
+
 # ---------------------------------------------------------------- 转换
 def convert(urdf_path, usd_path, root_name='walker_c1'):
     urdf_dir = os.path.dirname(os.path.abspath(urdf_path))
     parser = ET.XMLParser(target=ET.TreeBuilder(insert_comments=True))
     r = ET.parse(urdf_path, parser=parser).getroot()
+    inertials = read_inertials(r)
     links = {l.get('name'): l for l in r.findall('link')}
     joints = r.findall('joint')
 
@@ -141,15 +176,13 @@ def convert(urdf_path, usd_path, root_name='walker_c1'):
             order.append(ch)
             queue.append(ch)
 
-    if os.path.exists(usd_path):
-        os.remove(usd_path)
-    stage = Usd.Stage.CreateNew(usd_path)
+    stage = Usd.Stage.CreateInMemory()
     UsdGeom.SetStageUpAxis(stage, 'Z')
     UsdGeom.SetStageMetersPerUnit(stage, 1.0)
     rp = UsdGeom.Xform.Define(stage, f'/{root_name}')
     stage.SetDefaultPrim(rp.GetPrim())
 
-    stats = dict(mesh=0, missing=[], no_visual=[], mass=0)
+    stats = dict(mesh=0, no_visual=[], mass=0)
 
     # ---- links
     for name in order:
@@ -157,30 +190,16 @@ def convert(urdf_path, usd_path, root_name='walker_c1'):
         p = UsdGeom.Xform.Define(stage, f'/{root_name}/{name}')
         p.AddTransformOp().Set(W[name])
 
-        inertial = l.find('inertial')
-        if inertial is not None:
-            mass = float(inertial.find('mass').get('value'))
-            o = inertial.find('origin')
-            com = vec(o.get('xyz')) if o is not None else np.zeros(3)
-            rpy = vec(o.get('rpy')) if o is not None else np.zeros(3)
-            Ri = rot_xyz(*rpy)
-            ie = inertial.find('inertia')
-            I = np.array([
-                [float(ie.get('ixx')), float(ie.get('ixy')), float(ie.get('ixz'))],
-                [float(ie.get('ixy')), float(ie.get('iyy')), float(ie.get('iyz'))],
-                [float(ie.get('ixz')), float(ie.get('iyz')), float(ie.get('izz'))],
-            ])
-            I = Ri @ I @ Ri.T
-            I = 0.5 * (I + I.T)
-            w, V = np.linalg.eigh(I)
-            if np.linalg.det(V) < 0:        # 特征向量符号任意，翻一列保证右手系
-                V[:, 2] *= -1.0
-            api = UsdPhysics.MassAPI.Apply(p.GetPrim())
-            api.CreateMassAttr(float(mass))
-            api.CreateCenterOfMassAttr(Gf.Vec3f(*[float(x) for x in com]))
-            api.CreateDiagonalInertiaAttr(Gf.Vec3f(*[float(x) for x in w]))
-            api.CreatePrincipalAxesAttr(to_quatf(_quat_from_R(V)))
-            stats['mass'] += 1
+        mass, com, tensor = inertials[name]
+        w, V = np.linalg.eigh(0.5 * (tensor + tensor.T))
+        if np.linalg.det(V) < 0:        # 特征向量符号任意，翻一列保证右手系
+            V[:, 2] *= -1.0
+        api = UsdPhysics.MassAPI.Apply(p.GetPrim())
+        api.CreateMassAttr(float(mass))
+        api.CreateCenterOfMassAttr(Gf.Vec3f(*[float(x) for x in com]))
+        api.CreateDiagonalInertiaAttr(Gf.Vec3f(*[float(x) for x in w]))
+        api.CreatePrincipalAxesAttr(to_quatf(_quat_from_R(V)))
+        stats['mass'] += 1
         UsdPhysics.RigidBodyAPI.Apply(p.GetPrim())
 
         vs = l.findall('visual')
@@ -200,8 +219,7 @@ def convert(urdf_path, usd_path, root_name='walker_c1'):
                 if child.tag == 'mesh':
                     fn = resolve_mesh(urdf_dir, child.get('filename'))
                     if fn is None:
-                        stats['missing'].append(child.get('filename'))
-                        continue
+                        raise FileNotFoundError(f'USD body {name!r}: missing mesh {child.get("filename")}')
                     prim = add_mesh(stage, gp, read_stl(fn))
                     stats['mesh'] += 1
                 elif child.tag == 'box':
@@ -290,7 +308,13 @@ def convert(urdf_path, usd_path, root_name='walker_c1'):
 
     UsdPhysics.ArticulationRootAPI.Apply(
         stage.GetPrimAtPath(f'/{root_name}/{root_link}'))
-    stage.GetRootLayer().Save()
+    target = Path(usd_path)
+    with tempfile.TemporaryDirectory(prefix='.c1-usd-', dir=target.parent) as tmp:
+        staged = Path(tmp) / target.name
+        if not stage.GetRootLayer().Export(str(staged)):
+            raise OSError(f'Could not export staged USD for {target}')
+        validate_exported_usd(staged, inertials)
+        staged.replace(target)
     return dict(links=len(links), joints=len(joints), **stats)
 
 
@@ -306,6 +330,6 @@ if __name__ == '__main__':
     info = convert(sys.argv[1], sys.argv[2])
     print('转换完成:', sys.argv[2])
     for k, v in info.items():
-        if k in ('missing', 'no_visual') and not v:
+        if k == 'no_visual' and not v:
             continue
         print(f'  {k}: {v}')
